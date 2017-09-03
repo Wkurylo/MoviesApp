@@ -8,17 +8,41 @@ public class MovieComponent {
 
     String mTitle;
     String mReleaseDate;
-    int mPoster;         // Drawable Resource ID
+    int mPosterUrl;         // Drawable Resource ID
     String mAverage;
     String mPlotSynopsis;
 
-    public MovieComponent(String title, String releaseDate, int poster, String average, String plot)
+    public MovieComponent(String title, String releaseDate, int posterUrl, String average, String plot)
     {
         mTitle = title;
         mReleaseDate = releaseDate;
-        mPoster = poster;
+        mPosterUrl = posterUrl;
         mAverage = average;
         mPlotSynopsis = plot;
     }
 
+    public String getTitle()
+    {
+        return mTitle;
+    }
+
+    public String getReleaseDate()
+    {
+        return mReleaseDate;
+    }
+
+    public int getPosterUrl()
+    {
+        return mPosterUrl;
+    }
+
+    public String getAverage()
+    {
+        return mAverage;
+    }
+
+    public String getPlotSynopsis()
+    {
+        return mPlotSynopsis;
+    }
 }
