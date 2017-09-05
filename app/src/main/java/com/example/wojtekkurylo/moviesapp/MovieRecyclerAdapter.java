@@ -20,14 +20,11 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     private Context mContext;
     private ArrayList<MovieComponent> mPostersUrlList;
-    private int mCounter = 0;
 
 
     public MovieRecyclerAdapter(Context context, ArrayList<MovieComponent> postersUrlList) {
         mContext = context;
         mPostersUrlList = postersUrlList;
-        mCounter = mCounter +1;
-        Log.d("Called MRAdapter","mCounter status: " + mCounter);
     }
 
     @Override
@@ -38,23 +35,26 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(MovieRecyclerAdapter.MovieViewHolder holder, int position) {
+    public void onBindViewHolder(MovieViewHolder holder, int position) {
         // Jezeli z ArrayList to braz URL z Stringow w kolejnosci np: load(movie_image.get(i).getAndroid_image_url()
-        Picasso.with(mContext).load(mPostersUrlList.get(position).getPosterUrl()).resize(20, 20).into(holder.item_image);
+        Picasso.with(mContext)
+                .load(mPostersUrlList.get(position).getPosterUrl())
+                //.resize(120, 60).
+                .placeholder(R.color.colorAccent)
+                .into(holder.itemImage);
     }
 
     @Override
     public int getItemCount() {
-        Log.d("getItemCount","mCounter status: " + mCounter);
         return mPostersUrlList.size();
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
-        ImageView item_image;
+        public ImageView itemImage;
 
         public MovieViewHolder(View viewItem) {
             super(viewItem);
-            item_image = (ImageView) viewItem.findViewById(R.id.item_image);
+            itemImage = (ImageView) viewItem.findViewById(R.id.item_image);
         }
     }
 }
