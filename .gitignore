@@ -8,3 +8,5 @@
 /captures
 /gradle.properties
 .externalNativeBuild
+app/libs/
+app/src/main/res/drawable/

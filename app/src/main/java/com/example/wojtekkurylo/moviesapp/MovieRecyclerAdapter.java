@@ -40,7 +40,6 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         Picasso.with(mContext)
                 .load(mPostersUrlList.get(position).getPosterUrl())
                 //.resize(120, 60).
-                .placeholder(R.color.colorAccent)
                 .into(holder.itemImage);
     }
 
