@@ -17,6 +17,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private MovieRecyclerAdapter mMovieRecycleAdapter;
+    private ArrayList<MovieComponent> mPostersUrlString;
+    private RecyclerView mRecyclerView;
 
     // TEST TEST TEST
     private final String android_image_urls[] = {
@@ -38,21 +40,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //URL url = NetworkRequest.buildUrl("popular");
 
-        initViews();
-    }
-
-    private void initViews() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recycler_view);
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<MovieComponent> postersUrlString = prepareData();
-        // TODO: 06.09.2017 I need to replace postersUrlString with ArrayList<MovieComponent> from onPostExecute method
-        mMovieRecycleAdapter = new MovieRecyclerAdapter(getApplicationContext(), postersUrlString);
-        recyclerView.setAdapter(mMovieRecycleAdapter);
+        mPostersUrlString = prepareData();
+        mMovieRecycleAdapter = new MovieRecyclerAdapter(getApplicationContext(), mPostersUrlString);
+        mRecyclerView.setAdapter(mMovieRecycleAdapter);
+
+        //URL url = NetworkRequest.buildUrl("popular");
+        new multiThreadingClass().execute("popular");
     }
 
     private ArrayList<MovieComponent> prepareData() {
@@ -88,16 +87,17 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e("MainActivity", "Error in MA with makeHttpRequest", e);
             }
-            return null;
+            //mPostersUrlString = prepareData();
+            return mPostersUrlString;
         }
 
 
         @Override
         protected void onPostExecute(ArrayList<MovieComponent> movieComponents) {
             if (!movieComponents.isEmpty()) {
-                // add the List at the last position of mNewsCustomAdapter constructor
-                mMovieRecycleAdapter.addAll(movieComponents);
-                // TODO: 06.09.2017  HOW to update Adapter with ArrayList from JSON ?
+                Log.d("MainActivity", "ArrayList<MovieComponent>: " + movieComponents);
+
+                mMovieRecycleAdapter.replaceMovieArrayList(movieComponents);
             }
 
         }

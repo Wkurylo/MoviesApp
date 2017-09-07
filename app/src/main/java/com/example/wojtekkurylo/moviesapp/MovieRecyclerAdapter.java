@@ -27,6 +27,8 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         mPostersUrlList = postersUrlList;
     }
 
+
+
     @Override
     public MovieRecyclerAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_row, parent, false);
@@ -55,6 +57,14 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             super(viewItem);
             itemImage = (ImageView) viewItem.findViewById(R.id.item_image);
         }
+    }
+
+    public void replaceMovieArrayList (ArrayList<MovieComponent> movieArrayList)
+    {
+        //mPostersUrlList.clear();
+        mPostersUrlList = movieArrayList;
+        //mPostersUrlList.addAll(movieArrayList);
+        notifyDataSetChanged();
     }
 }
 
