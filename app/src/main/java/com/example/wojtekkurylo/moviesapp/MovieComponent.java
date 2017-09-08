@@ -12,14 +12,18 @@ public class MovieComponent {
     private Double mAverage;                                    // number
     private String mPlotSynopsis;                                // String
 
-//    public MovieComponent(String posterUrl)
-//    {
-////        mTitle = title;
-////        mReleaseDate = releaseDate;
-//        mPosterUrl = posterUrl;
-////        mAverage = average;
-////        mPlotSynopsis = plot;
-//    }
+    public MovieComponent(String title, String releaseDate, String posterUrl, Number average, String plot)
+    {
+        mTitle = title;
+        mReleaseDate = releaseDate;
+        String firstPart = "http://image.tmdb.org/t/p/w185/";
+        mPosterUrl = firstPart + posterUrl;
+        // TODO: 08.09.2017 SPRAWDZIC czy String jest dobrze polaczony + wyciagnac URL z Obiektu MovieComponent 
+        // dostane: /nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
+        // cel: http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
+        mAverage = average.doubleValue();
+        mPlotSynopsis = plot;
+    }
 
 
 
