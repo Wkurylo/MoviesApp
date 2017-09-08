@@ -6,7 +6,8 @@
 .DS_Store
 /build
 /captures
-/gradle.properties
+.gradle.properties
 .externalNativeBuild
 app/libs/
 app/src/main/res/drawable/
+/gradle.properties
