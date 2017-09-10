@@ -6,11 +6,11 @@ package com.example.wojtekkurylo.moviesapp;
 
 public class MovieComponent {
 
-    private String mTitle;                                       // String
-    private String mReleaseDate;                                // String
-    private String mPosterUrl;         // Drawable Resource ID  // String or null !
-    private Double mAverage;                                    // number
-    private String mPlotSynopsis;                                // String
+    private static String mTitle;                                       // String
+    private static String mReleaseDate;                                // String
+    private static String mPosterUrl;         // Drawable Resource ID  // String or null !
+    private static Double mAverage;                                    // number
+    private static String mPlotSynopsis;                                // String
 
     public MovieComponent(String title, String releaseDate, String posterUrl, Number average, String plot)
     {
@@ -18,21 +18,20 @@ public class MovieComponent {
         mReleaseDate = releaseDate;
         String firstPart = "http://image.tmdb.org/t/p/w185/";
         mPosterUrl = firstPart + posterUrl;
-        // TODO: 08.09.2017 SPRAWDZIC czy String jest dobrze polaczony + wyciagnac URL z Obiektu MovieComponent
-        // dostane: /nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
-        // cel: http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
+        // received from JSON: /nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
+        // target: http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
         mAverage = average.doubleValue();
         mPlotSynopsis = plot;
     }
 
 
 
-    public String getTitle()
+    public static String getTitle()
     {
         return mTitle;
     }
 
-    public String getReleaseDate()
+    public static String getReleaseDate()
     {
         return mReleaseDate;
     }
@@ -40,7 +39,8 @@ public class MovieComponent {
     public void setMovieImageUrl(String movieImageurl) {
         mPosterUrl = movieImageurl;
     }
-    public String getPosterUrl()
+
+    public static String getPosterUrl()
     {
         return mPosterUrl;
     }
@@ -48,7 +48,8 @@ public class MovieComponent {
     public void setMovieAverage(Number average) {
         mAverage = average.doubleValue();
     }
-    public Double getAverage()
+
+    public static Double getAverage()
     {
         return mAverage;
     }
@@ -57,7 +58,8 @@ public class MovieComponent {
     {
         mPlotSynopsis = synopsis;
     }
-    public String getPlotSynopsis()
+
+    public static String getPlotSynopsis()
     {
         return mPlotSynopsis;
     }

@@ -1,10 +1,12 @@
 package com.example.wojtekkurylo.moviesapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -20,14 +22,18 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     private Context mContext;
     private ArrayList<MovieComponent> mPostersUrlList;
+    private final MovieAdapterOnClickHandler mClickHandler;
 
-
-    public MovieRecyclerAdapter(Context context, ArrayList<MovieComponent> postersUrlList) {
-        mContext = context;
-        mPostersUrlList = postersUrlList;
+    public interface MovieAdapterOnClickHandler {
+        void onClick(String title, String releaseDate, String posterUrl, Double average, String overview);
     }
 
 
+    public MovieRecyclerAdapter(MovieAdapterOnClickHandler clickHandler, Context context) {
+        mContext = context;
+        //mPostersUrlList = postersUrlList;
+        mClickHandler = clickHandler;
+    }
 
     @Override
     public MovieRecyclerAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,20 +53,37 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     @Override
     public int getItemCount() {
-        return mPostersUrlList.size();
+        if (mPostersUrlList == null) {
+            return 0;
+        } else {
+            return mPostersUrlList.size();
+        }
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder {
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         public ImageView itemImage;
 
         public MovieViewHolder(View viewItem) {
             super(viewItem);
             itemImage = (ImageView) viewItem.findViewById(R.id.item_image);
+            viewItem.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            String title = MovieComponent.getTitle();
+            String releaseDate = MovieComponent.getReleaseDate();
+            String posterUrl = MovieComponent.getPosterUrl();
+            Double average = MovieComponent.getAverage();
+            String overview = MovieComponent.getPlotSynopsis();
+            Log.d("Movie Recycle Adapter", "Result: " + title + releaseDate + posterUrl + average + overview);
+            mClickHandler.onClick(title, releaseDate,posterUrl,average, overview);
+        }
+
     }
 
-    public void replaceMovieArrayList (ArrayList<MovieComponent> movieArrayList)
-    {
+    public void replaceMovieArrayList(ArrayList<MovieComponent> movieArrayList) {
         //mPostersUrlList.clear();
         mPostersUrlList = movieArrayList;
         //mPostersUrlList.addAll(movieArrayList);
