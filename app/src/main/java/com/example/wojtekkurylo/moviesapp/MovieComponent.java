@@ -18,7 +18,7 @@ public class MovieComponent {
         mReleaseDate = releaseDate;
         String firstPart = "http://image.tmdb.org/t/p/w185/";
         mPosterUrl = firstPart + posterUrl;
-        // TODO: 08.09.2017 SPRAWDZIC czy String jest dobrze polaczony + wyciagnac URL z Obiektu MovieComponent 
+        // TODO: 08.09.2017 SPRAWDZIC czy String jest dobrze polaczony + wyciagnac URL z Obiektu MovieComponent
         // dostane: /nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
         // cel: http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
         mAverage = average.doubleValue();
