@@ -29,6 +29,10 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(DetailActivity.this);
 
+        // TODO: 3 Receive Parcel Object
+        // TODO: 4 Create MovieComponent instance and setText/ etc
+
+
 
 
     }
