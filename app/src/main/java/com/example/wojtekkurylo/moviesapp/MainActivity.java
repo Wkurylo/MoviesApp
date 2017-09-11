@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        //mPostersUrlString = prepareData();
         mMovieRecycleAdapter = new MovieRecyclerAdapter(this, MainActivity.this);
         mRecyclerView.setAdapter(mMovieRecycleAdapter);
 

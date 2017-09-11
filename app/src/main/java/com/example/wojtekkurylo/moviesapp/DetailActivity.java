@@ -30,5 +30,6 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(DetailActivity.this);
 
 
+
     }
 }

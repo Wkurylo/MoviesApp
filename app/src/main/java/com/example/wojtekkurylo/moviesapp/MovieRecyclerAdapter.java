@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.MovieViewHolder> {
 
     private Context mContext;
-    private ArrayList<MovieComponent> mPostersUrlList;
+    private ArrayList<MovieComponent> mAllDataInArrayList;
     private final MovieAdapterOnClickHandler mClickHandler;
 
     public interface MovieAdapterOnClickHandler {
@@ -46,22 +46,22 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         // Jezeli z ArrayList to braz URL z Stringow w kolejnosci np: load(movie_image.get(i).getAndroid_image_url()
         Picasso.with(mContext)
-                .load(mPostersUrlList.get(position).getPosterUrl())
+                .load(mAllDataInArrayList.get(position).getPosterUrl())
                 //.resize(120, 60).
                 .into(holder.itemImage);
     }
 
     @Override
     public int getItemCount() {
-        if (mPostersUrlList == null) {
+        if (mAllDataInArrayList == null) {
             return 0;
         } else {
-            return mPostersUrlList.size();
+            return mAllDataInArrayList.size();
         }
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-        public ImageView itemImage;
+        public final ImageView itemImage;
 
         public MovieViewHolder(View viewItem) {
             super(viewItem);
@@ -71,12 +71,14 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         @Override
         public void onClick(View v) {
+
             int adapterPosition = getAdapterPosition();
-            String title = MovieComponent.getTitle();
-            String releaseDate = MovieComponent.getReleaseDate();
-            String posterUrl = MovieComponent.getPosterUrl();
-            Double average = MovieComponent.getAverage();
-            String overview = MovieComponent.getPlotSynopsis();
+            MovieComponent movie = mAllDataInArrayList.get(adapterPosition);
+            String title = movie.getTitle();
+            String releaseDate = movie.getReleaseDate();
+            String posterUrl = movie.getPosterUrl();
+            Double average = movie.getAverage();
+            String overview = movie.getPlotSynopsis();
             Log.d("Movie Recycle Adapter", "Result: " + title + releaseDate + posterUrl + average + overview);
             mClickHandler.onClick(title, releaseDate,posterUrl,average, overview);
         }
@@ -85,7 +87,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     public void replaceMovieArrayList(ArrayList<MovieComponent> movieArrayList) {
         //mPostersUrlList.clear();
-        mPostersUrlList = movieArrayList;
+        mAllDataInArrayList = movieArrayList;
         //mPostersUrlList.addAll(movieArrayList);
         notifyDataSetChanged();
     }

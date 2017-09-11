@@ -6,11 +6,15 @@ package com.example.wojtekkurylo.moviesapp;
 
 public class MovieComponent {
 
-    private static String mTitle;                                       // String
-    private static String mReleaseDate;                                // String
-    private static String mPosterUrl;         // Drawable Resource ID  // String or null !
-    private static Double mAverage;                                    // number
-    private static String mPlotSynopsis;                                // String
+    private String mTitle;                                       // String
+    private String mReleaseDate;                                // String
+    private String mPosterUrl;         // Drawable Resource ID  // String or null !
+    private Double mAverage;                                    // number
+    private String mPlotSynopsis;                                // String
+
+    public MovieComponent(){
+
+    }
 
     public MovieComponent(String title, String releaseDate, String posterUrl, Number average, String plot)
     {
@@ -26,12 +30,12 @@ public class MovieComponent {
 
 
 
-    public static String getTitle()
+    public String getTitle()
     {
         return mTitle;
     }
 
-    public static String getReleaseDate()
+    public String getReleaseDate()
     {
         return mReleaseDate;
     }
@@ -40,7 +44,7 @@ public class MovieComponent {
         mPosterUrl = movieImageurl;
     }
 
-    public static String getPosterUrl()
+    public String getPosterUrl()
     {
         return mPosterUrl;
     }
@@ -49,7 +53,7 @@ public class MovieComponent {
         mAverage = average.doubleValue();
     }
 
-    public static Double getAverage()
+    public Double getAverage()
     {
         return mAverage;
     }
@@ -59,7 +63,7 @@ public class MovieComponent {
         mPlotSynopsis = synopsis;
     }
 
-    public static String getPlotSynopsis()
+    public String getPlotSynopsis()
     {
         return mPlotSynopsis;
     }
