@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         mMovieRecycleAdapter = new MovieRecyclerAdapter(this, MainActivity.this);
         mRecyclerView.setAdapter(mMovieRecycleAdapter);
 
-        // TODO: 5 Check for interent connection (display message if not available + AndroidManifest exception)
-        // TODO: 6 Add option to choose most popular OR highest rated - menu
+        // TODO: 1 Check for interent connection (display message if not available + AndroidManifest exception)
+        // TODO: 2 Add option to choose most popular OR highest rated - menu
+        // TODO: 3 Polish XML - Detail_activity
         //URL url = NetworkRequest.buildUrl("popular");
         new multiThreadingClass().execute("popular");
     }
@@ -53,12 +54,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     @Override
     public void onClick(String title, String releaseDate, String posterUrl, Double average, String overview) {
         Intent intentToStartDetailActivity = new Intent(MainActivity.this, DetailActivity.class);
-        // TODO: 2 Send Parcel Object
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, title);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, releaseDate);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, posterUrl);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, average);
-        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, overview);
+        MovieComponent movieObject = new MovieComponent(title,releaseDate,posterUrl,average,overview);
+        intentToStartDetailActivity.putExtra("movieObject", movieObject);
         startActivity(intentToStartDetailActivity);
     }
 
@@ -99,8 +96,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList("mAllDataInArrayList",mAllDataInArrayList);
-        // TODO: 1 IMPLEMENT Parcelable to MovieComponent Class
-
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
