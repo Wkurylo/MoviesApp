@@ -2,21 +2,33 @@ package com.example.wojtekkurylo.moviesapp;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Switch;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MovieRecyclerAdapter.MovieAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MovieRecyclerAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
     private MovieRecyclerAdapter mMovieRecycleAdapter;
     private ArrayList<MovieComponent> mAllDataInArrayList;
     private RecyclerView mRecyclerView;
+    private String mSearchString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +40,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         if(savedInstanceState == null || !savedInstanceState.containsKey("mAllDataInArrayList"))
         {
             mAllDataInArrayList = new ArrayList<MovieComponent>();
+            mSearchString = "popular";
         }else
         {
             mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
+            mSearchString = savedInstanceState.getString("searchString");
         }
         // set the user interface layout for this Activity
         // the layout file is defined in the project res/layout/activity_main.xml file
@@ -45,10 +59,9 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         mRecyclerView.setAdapter(mMovieRecycleAdapter);
 
         // TODO: 1 Check for interent connection (display message if not available + AndroidManifest exception)
-        // TODO: 2 Add option to choose most popular OR highest rated - menu
-        // TODO: 3 Polish XML - Detail_activity
-        //URL url = NetworkRequest.buildUrl("popular");
-        new multiThreadingClass().execute("popular");
+        // TODO: 2 Polish XML - Detail_activity
+        // TODO: 3 ViewModel - ?
+        // TODO: 4 Do not loose the content on rotation without Loader Class ? 
     }
 
     @Override
@@ -96,11 +109,55 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList("mAllDataInArrayList",mAllDataInArrayList);
+        outState.putString("searchString",mSearchString);
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
 
-//    Why Parcelable ?
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.spinner_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.spinner);
+        Spinner spinner = (Spinner) item.getActionView();
+        spinner.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("popular");
+        categories.add("top_rated");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(adapter);
+        return true;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        mSearchString = adapterView.getItemAtPosition(i).toString();
+        Log.d("MainActivity", "SELECTED onItemSelected: "+ mSearchString);
+        new multiThreadingClass().execute(mSearchString);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
+        super.onCreateSupportNavigateUpTaskStack(builder);
+    }
+
+
+
+    //    Why Parcelable ?
 //      When starting on Android, we all learn that we cannot just pass object references to activities and fragments,
 //      we have to put those in an Intent / Bundle.
 //
