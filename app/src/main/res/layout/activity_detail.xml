@@ -17,6 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
             android:textSize="25sp"/>
 
         <ImageView
@@ -27,21 +29,30 @@
 
         <TextView
             android:id="@+id/detail_release_date"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginTop="15sp"
+            android:layout_marginBottom="5sp"
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
         
         <TextView
             android:id="@+id/detail_average"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginBottom="10sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/detail_overview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"/>
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:textSize="18sp"/>
 
     </LinearLayout>
 </ScrollView>

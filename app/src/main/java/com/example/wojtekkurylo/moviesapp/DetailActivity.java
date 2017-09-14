@@ -41,15 +41,15 @@ public class DetailActivity extends AppCompatActivity {
         MovieComponent receivedMovieObject = (MovieComponent) getIntent().getParcelableExtra("movieObject");
 
         mDetailTitle.setText(receivedMovieObject.getTitle());
-        mDetailRelease.setText(receivedMovieObject.getReleaseDate());
+        mDetailRelease.setText(getString(R.string.release_date) +" "+ receivedMovieObject.getReleaseDate());
 
         Picasso.with(getApplicationContext())
                 .load(receivedMovieObject.getPosterUrlDetailActivity())
                 .into(mDetailPoster);
         Log.d("DetailActivity", "PosterUrl: " + receivedMovieObject.getPosterUrlDetailActivity());
 
-        mDetailAverage.setText(receivedMovieObject.getAverage().toString());
-        mDetailOverview.setText(receivedMovieObject.getPlotSynopsis());
+        mDetailAverage.setText(getString(R.string.average) +" "+receivedMovieObject.getAverage().toString());
+        mDetailOverview.setText(getString(R.string.overview) + receivedMovieObject.getPlotSynopsis());
 
 
 

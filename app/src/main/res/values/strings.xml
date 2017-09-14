@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MoviesApp</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="no_movies">Check Your Query</string>
+    <string name="popular">popular</string>
+    <string name="top_rated">top_rated</string>
+    <string name="release_date">Release Date: </string>
+    <string name="average">Average: </string>
+    <string name="overview">Overview \n\n</string>
 </resources>
