@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     @BindView(R.id.no_movies)
     TextView noMovies;
 
-    // TODO: 14.09.2017 Remove additional Logs
-    // TODO: 14.09.2017 Add code description
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // call the super class onCreate to complete the creation of activity like
@@ -55,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 
         // recovering the instance state if exist
         if (savedInstanceState == null || !savedInstanceState.containsKey("mAllDataInArrayList")) {
-            mAllDataInArrayList = new ArrayList<MovieComponent>();
+            mAllDataInArrayList = new ArrayList<>();
         } else {
             mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
             //mMovieRecycleAdapter.replaceMovieArrayList(mAllDataInArrayList);
@@ -67,11 +64,23 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         // ButterKnife == findViewById() - performing the action for @BindViews
         ButterKnife.bind(MainActivity.this);
 
+         /*
+         * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
+         * do things like set the adapter of the RecyclerView and toggle the visibility.
+         */
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_recycler_view);
+        /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
         mRecyclerView.setHasFixedSize(true);
+        /*
+         * GridLayoutManager with 2 columns
+         */
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
 
+        /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mMovieRecycleAdapter);
 
         // Checking the internet connection
@@ -82,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         // set the text to display in stead of ListView while no internet
         noInternet.setText(R.string.no_internet);
 
+        // Checking the internet connection
         if (isConnected) {
             noInternet.setVisibility(View.GONE);
         } else {
@@ -92,6 +102,17 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         }
     }
 
+    /**
+     * This method is overridden by our MainActivity class in order to handle RecyclerView item
+     * clicks.
+     *
+     * @param title The title for the movie that was clicked
+     * @param releaseDate The releaseDate for the movie that was clicked
+     * @param posterUrl The Image URL in String for the movie that was clicked
+     * @param average The average for the movie that was clicked
+     * @param overview The overview for the movie that was clicked
+     *
+     */
     @Override
     public void onClick(String title, String releaseDate, String posterUrl, Double average, String overview) {
         Intent intentToStartDetailActivity = new Intent(MainActivity.this, DetailActivity.class);
@@ -100,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         startActivity(intentToStartDetailActivity);
     }
 
-    public class multiThreadingClass extends AsyncTask<String, Void, ArrayList<MovieComponent>> {
+
+    private class multiThreadingClass extends AsyncTask<String, Void, ArrayList<MovieComponent>> {
         @Override
         protected void onPreExecute() {
             if (spinnerView.getVisibility() == View.GONE) {
@@ -160,18 +182,20 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         spinner.setOnItemSelectedListener(this);
 
         // Spinner Drop down elements
-        List<String> categories = new ArrayList<String>();
+        List<String> categories = new ArrayList<>();
         categories.add(getString(R.string.popular));
         categories.add(getString(R.string.top_rated));
 
         // Creating adapter for spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
 
         // Drop down layout style - list view with radio button
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner
         spinner.setAdapter(adapter);
+
+        /* Return true so that the menu is displayed in the Toolbar */
         return true;
     }
 
@@ -179,6 +203,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         mSearchString = adapterView.getItemAtPosition(i).toString();
         Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
+
+        /* Sending the HTTP and JSON parse in to background */
         new multiThreadingClass().execute(mSearchString);
 
     }

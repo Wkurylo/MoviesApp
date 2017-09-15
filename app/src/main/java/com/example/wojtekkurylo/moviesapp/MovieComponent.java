@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 /**
- * Created by wojtekkurylo on 01.09.2017.
+ * {@link MovieComponent} Custom class to store reference to movie details. The Class implements Parcelable
  */
 
 public class MovieComponent implements Parcelable {
@@ -14,14 +14,14 @@ public class MovieComponent implements Parcelable {
     public static final Creator<MovieComponent> CREATOR = new Creator<MovieComponent>() {
         @Override
         public MovieComponent createFromParcel(Parcel in) {
-            Log.d("MovieCmponent", "EXECUTING: MovieComponent createFromParcel(Parcel in)");
+            Log.d("MovieComponent", "EXECUTING: MovieComponent createFromParcel(Parcel in)");
             return new MovieComponent(in);
         }
 
         // NOT EXECUTING
         @Override
         public MovieComponent[] newArray(int size) {
-            Log.d("MovieCmponent", "EXECUTING: MovieComponent[] newArray(int size)");
+            Log.d("MovieComponent", "EXECUTING: MovieComponent[] newArray(int size)");
             return new MovieComponent[size];
         }
     };
@@ -48,13 +48,13 @@ public class MovieComponent implements Parcelable {
         parcel.writeString(mPosterUrl);
         parcel.writeDouble(mAverage);
         parcel.writeString(mPlotSynopsis);
-        Log.d("MovieCmponent", "EXECUTING: writeToParcel");
+        Log.d("MovieComponent", "EXECUTING: writeToParcel");
     }
 
     // NOT EXECUTING
     @Override
     public int describeContents() {
-        Log.d("MovieCmponent", "EXECUTING: describeContents");
+        Log.d("MovieComponent", "EXECUTING: describeContents");
         return 0;
     }
 
@@ -69,7 +69,7 @@ public class MovieComponent implements Parcelable {
         mPosterUrl = in.readString();
         mAverage = in.readDouble();
         mPlotSynopsis = in.readString();
-        Log.d("MovieCmponent", "EXECUTING: MovieComponent(Parcel in)");
+        Log.d("MovieComponent", "EXECUTING: MovieComponent(Parcel in)");
 
     }
 
@@ -90,10 +90,9 @@ public class MovieComponent implements Parcelable {
     }
     public String getPosterUrl() {
         String firstPart = "http://image.tmdb.org/t/p/w500/";
-        String sentToMain = firstPart + mPosterUrl;
         // received from JSON: /nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
         // target: http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg
-        return sentToMain;
+        return firstPart + mPosterUrl;
     }
 
     public void setMovieAverage(Number average) {

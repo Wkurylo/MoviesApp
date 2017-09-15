@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -38,7 +37,7 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(DetailActivity.this);
 
-        MovieComponent receivedMovieObject = (MovieComponent) getIntent().getParcelableExtra("movieObject");
+        MovieComponent receivedMovieObject = getIntent().getParcelableExtra("movieObject");
 
         mDetailTitle.setText(receivedMovieObject.getTitle());
         mDetailRelease.setText(getString(R.string.release_date) +" "+ receivedMovieObject.getReleaseDate());

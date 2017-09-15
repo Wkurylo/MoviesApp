@@ -7,10 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by wojtekkurylo on 08.09.2017.
+ * {@link JsonParse} perform JSON parse;
  */
 
 public class JsonParse {
@@ -23,7 +22,7 @@ public class JsonParse {
             return null;
         }
 
-        ArrayList<MovieComponent> movieArray = new ArrayList<MovieComponent>();
+        ArrayList<MovieComponent> movieArray = new ArrayList<>();
         try{
 
             JSONObject rootObject = new JSONObject(jsonResponse);
@@ -37,10 +36,10 @@ public class JsonParse {
                 String releaseDate = currentObject.getString("release_date");
                 String posterUrl = currentObject.getString("poster_path");
                 Number average = currentObject.getDouble("vote_average");
-                String overwiew = currentObject.getString("overview");
+                String overview = currentObject.getString("overview");
 
                 // Create Movie Object
-                MovieComponent movie = new MovieComponent(title, releaseDate, posterUrl, average, overwiew);
+                MovieComponent movie = new MovieComponent(title, releaseDate, posterUrl, average, overview);
                 // Add created Objects to ArrayList<MovieComponent> @ i-th position
                 movieArray.add(i, movie);
             }

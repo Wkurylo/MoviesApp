@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:context="com.example.wojtekkurylo.moviesapp.DetailActivity">
 
@@ -34,6 +34,7 @@
             android:layout_marginTop="15sp"
             android:layout_marginBottom="5sp"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textStyle="bold"
             android:textColor="@color/black"/>
         
@@ -44,6 +45,7 @@
             android:layout_marginBottom="10sp"
             android:textColor="@color/black"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:textStyle="bold"/>
 
         <TextView

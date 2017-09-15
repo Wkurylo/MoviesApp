@@ -11,14 +11,10 @@ import java.net.URL;
 import java.util.Scanner;
 
 /**
- * Created by wojtekkurylo on 06.09.2017.
+ * {@link NetworkRequest} build URI and perform HTTP request;
  */
 
 public class NetworkRequest {
-
-    //https://api.themoviedb.org/3/movie/popular?api_key=ae1ff862219dfe7befa0155624128745
-    //https://api.themoviedb.org/3/movie/top_rated?api_key=ae1ff862219dfe7befa0155624128745
-
     private static final String MOVIE_DB = "https://api.themoviedb.org/3/movie";
     private static final String API_KEY_KEY = "api_key";
     private static final String API_KEY_VALUE = BuildConfig.API_KEY;
@@ -63,7 +59,6 @@ public class NetworkRequest {
                 boolean hasInput = scanner.hasNext();
                 if (hasInput) {
                     jsonResponse = scanner.next();
-                    Log.d("Network Request", "JSON feedback: " + jsonResponse);
                     return jsonResponse;
                 } else {
                     return jsonResponse; // else return empty String
