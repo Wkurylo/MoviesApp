@@ -1,6 +1,8 @@
-package com.example.wojtekkurylo.moviesapp;
+package com.example.wojtekkurylo.moviesapp.Networking;
 
 import android.util.Log;
+
+import com.example.wojtekkurylo.moviesapp.MovieComponent;
 
 import org.json.JSONArray;
 import org.json.JSONException;

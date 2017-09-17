@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context="com.example.wojtekkurylo.moviesapp.DetailActivity">
+        tools:context="com.example.wojtekkurylo.moviesapp.Activities.DetailActivity">
 
 
         <TextView

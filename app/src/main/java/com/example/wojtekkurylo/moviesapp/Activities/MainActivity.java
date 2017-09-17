@@ -1,4 +1,4 @@
-package com.example.wojtekkurylo.moviesapp;
+package com.example.wojtekkurylo.moviesapp.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.wojtekkurylo.moviesapp.MovieComponent;
+import com.example.wojtekkurylo.moviesapp.MovieRecyclerAdapter;
+import com.example.wojtekkurylo.moviesapp.Networking.JsonParse;
+import com.example.wojtekkurylo.moviesapp.Networking.NetworkRequest;
+import com.example.wojtekkurylo.moviesapp.R;
+import com.example.wojtekkurylo.moviesapp.Values.Constants;
 
 import java.io.IOException;
 import java.net.URL;
@@ -51,11 +58,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         super.onCreate(savedInstanceState);
 
         // recovering the instance state if exist
-        if (savedInstanceState == null || !savedInstanceState.containsKey("mAllDataInArrayList")) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey(Constants.KEY_ARRAY_LIST_PARCELABLE)) {
             mAllDataInArrayList = new ArrayList<>();
         } else {
             mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
-            //mMovieRecycleAdapter.replaceMovieArrayList(mAllDataInArrayList);
         }
         // set the user interface layout for this Activity
         // the layout file is defined in the project res/layout/activity_main.xml file
@@ -100,6 +106,12 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
             spinnerView.setVisibility(View.GONE);
             noMovies.setVisibility(View.GONE);
         }
+
+        // TODO: Will be used later
+//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putString(getString(R.string.selected),mSearchString);
+//        editor.commit();
     }
 
     /**
@@ -165,10 +177,20 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         }
     }
 
+    // We restore after onStart() has completed.
+    // The savedInstanceState Bundle is same as the one used in onCreate().
+    // The system calls onRestoreInstanceState() only if there is a saved state to restore,
+    // so you do not need to check whether the Bundle is null
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // recovering the instance state if exist
+        mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
+    }
+
     // invoked when the activity may be temporarily destroyed, save the instance state here
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("mAllDataInArrayList", mAllDataInArrayList);
+        outState.putParcelableArrayList(Constants.KEY_ARRAY_LIST_PARCELABLE, mAllDataInArrayList);
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
@@ -201,11 +223,27 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        mSearchString = adapterView.getItemAtPosition(i).toString();
+
+        mSearchString = adapterView.getSelectedItem().toString();
+
+         /* Sending the HTTP and JSON parse in to background */
+        new multiThreadingClass().execute(mSearchString);
         Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
 
-        /* Sending the HTTP and JSON parse in to background */
-        new multiThreadingClass().execute(mSearchString);
+        // TODO: Will be used later
+//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+//        String defaultValue = getResources().getString(R.string.popular);
+//        String sharedString = sharedPref.getString(getString(R.string.selected),defaultValue);
+//        if(sharedString.equals(mSearchString))
+//        {
+//            return;
+//        } else {
+//             /* Sending the HTTP and JSON parse in to background */
+//            new multiThreadingClass().execute(mSearchString);
+//            Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
+//        }
+
+
 
     }
 

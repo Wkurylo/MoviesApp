@@ -1,4 +1,4 @@
-package com.example.wojtekkurylo.moviesapp;
+package com.example.wojtekkurylo.moviesapp.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.wojtekkurylo.moviesapp.MovieComponent;
+import com.example.wojtekkurylo.moviesapp.R;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -44,6 +46,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Picasso.with(getApplicationContext())
                 .load(receivedMovieObject.getPosterUrlDetailActivity())
+                .error(R.drawable.noimage)
                 .into(mDetailPoster);
         Log.d("DetailActivity", "PosterUrl: " + receivedMovieObject.getPosterUrlDetailActivity());
 

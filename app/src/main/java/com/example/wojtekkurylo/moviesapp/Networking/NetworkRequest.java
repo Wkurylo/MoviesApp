@@ -1,7 +1,9 @@
-package com.example.wojtekkurylo.moviesapp;
+package com.example.wojtekkurylo.moviesapp.Networking;
 
 import android.net.Uri;
 import android.util.Log;
+
+import com.example.wojtekkurylo.moviesapp.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
