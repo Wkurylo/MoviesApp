@@ -44,9 +44,13 @@ public class DetailActivity extends AppCompatActivity {
         mDetailTitle.setText(receivedMovieObject.getTitle());
         mDetailRelease.setText(getString(R.string.release_date) +" "+ receivedMovieObject.getReleaseDate());
 
+        // it is recommended to supply a fallback image in case something goes wrong during the image fetching.
+        //It this case, R.drawable.no_image image will be displayed if an error happens during the fetching.
+        // Alternative to Picasso is Glide libraries
+
         Picasso.with(getApplicationContext())
                 .load(receivedMovieObject.getPosterUrlDetailActivity())
-                .error(R.drawable.noimage)
+                .error(R.drawable.no_image)
                 .into(mDetailPoster);
         Log.d("DetailActivity", "PosterUrl: " + receivedMovieObject.getPosterUrlDetailActivity());
 
