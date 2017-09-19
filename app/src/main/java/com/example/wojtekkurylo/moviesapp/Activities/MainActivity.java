@@ -21,11 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.wojtekkurylo.moviesapp.MovieComponent;
-import com.example.wojtekkurylo.moviesapp.MovieRecyclerAdapter;
+import com.example.wojtekkurylo.moviesapp.BuildConfig;
+import com.example.wojtekkurylo.moviesapp.Model.MovieComponent;
+import com.example.wojtekkurylo.moviesapp.Adapter.MovieRecyclerAdapter;
 import com.example.wojtekkurylo.moviesapp.Networking.JsonParse;
 import com.example.wojtekkurylo.moviesapp.Networking.NetworkRequest;
 import com.example.wojtekkurylo.moviesapp.R;
+import com.example.wojtekkurylo.moviesapp.Rest.MovieApiService;
 import com.example.wojtekkurylo.moviesapp.Values.Constants;
 
 import java.io.IOException;
@@ -35,13 +37,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements MovieRecyclerAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private MovieRecyclerAdapter mMovieRecycleAdapter = new MovieRecyclerAdapter(this, MainActivity.this);
     private ArrayList<MovieComponent> mAllDataInArrayList;
     private RecyclerView mRecyclerView;
     private String mSearchString;
+    private static Retrofit mRetrofit = null;
+
+    // themoviedb.org API KEY
+    private static final String API_KEY_VALUE = BuildConfig.API_KEY;
+    // base URL
+    private static final String MOVIE_DB = "https://api.themoviedb.org/3/";
+
 
     //@BindView == ListView newsListView = (ListView) - automatically casting
     @BindView(R.id.loading_spinner)
@@ -112,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 //        SharedPreferences.Editor editor = sharedPref.edit();
 //        editor.putString(getString(R.string.selected),mSearchString);
 //        editor.commit();
+
+        useRetrofilToConnectAndGetAiData();
     }
 
     /**
@@ -133,49 +150,81 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         startActivity(intentToStartDetailActivity);
     }
 
-
-    private class multiThreadingClass extends AsyncTask<String, Void, ArrayList<MovieComponent>> {
-        @Override
-        protected void onPreExecute() {
-            if (spinnerView.getVisibility() == View.GONE) {
-                spinnerView.setVisibility(View.VISIBLE);
-            }
-            super.onPreExecute();
+    // This method create an instance of Retrofit
+    public void useRetrofilToConnectAndGetAiData() {
+        if (mRetrofit == null) {
+            mRetrofit = new Retrofit.Builder()
+                    .baseUrl(MOVIE_DB)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
         }
 
-        @Override
-        protected ArrayList<MovieComponent> doInBackground(String... strings) {
+        MovieApiService movieApiService = mRetrofit.create(MovieApiService.class);
 
-            if (strings.length == 0) {
-                return null;
+        Call<MovieComponent> call = movieApiService.getMostPopularMovies(API_KEY_VALUE);
+        call.enqueue(new Callback<MovieComponent>() {
+            @Override
+            public void onResponse(Call<MovieComponent> call, Response<MovieComponent> response) {
+
+                ArrayList<MovieComponent> movieArray = response.body().getResults();
+
+                mMovieRecycleAdapter.replaceMovieArrayList(movieArray);
+
             }
 
-            String selection = strings[0];
-            URL url = NetworkRequest.buildUrl(selection);
+            @Override
+            public void onFailure(Call<MovieComponent> call, Throwable t) {
 
-            try {
-                String jsonMovieResponse = NetworkRequest.makeHttpRequest(url);
-                mAllDataInArrayList = JsonParse.extractNews(jsonMovieResponse);
-            } catch (IOException e) {
-                Log.e("MainActivity", "Error in MA with makeHttpRequest", e);
+                Log.e(TAG, t.toString());
             }
-            //mPostersUrlString = prepareData();
-            return mAllDataInArrayList;
-        }
+        });
 
-        @Override
-        protected void onPostExecute(ArrayList<MovieComponent> movieComponents) {
-            if (spinnerView.getVisibility() == View.VISIBLE) {
-                spinnerView.setVisibility(View.GONE);
-            }
-            if (!movieComponents.isEmpty()) {
-                mMovieRecycleAdapter.replaceMovieArrayList(movieComponents);
-                noInternet.setVisibility(View.GONE);
-            } else {
-                noMovies.setText(R.string.no_movies);
-            }
-        }
     }
+
+
+
+//    private class multiThreadingClass extends AsyncTask<String, Void, ArrayList<MovieComponent>> {
+//        @Override
+//        protected void onPreExecute() {
+//            if (spinnerView.getVisibility() == View.GONE) {
+//                spinnerView.setVisibility(View.VISIBLE);
+//            }
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected ArrayList<MovieComponent> doInBackground(String... strings) {
+//
+//            if (strings.length == 0) {
+//                return null;
+//            }
+//
+//            String selection = strings[0];
+//            URL url = NetworkRequest.buildUrl(selection);
+//
+//            try {
+//                String jsonMovieResponse = NetworkRequest.makeHttpRequest(url);
+//                mAllDataInArrayList = JsonParse.extractNews(jsonMovieResponse);
+//            } catch (IOException e) {
+//                Log.e("MainActivity", "Error in MA with makeHttpRequest", e);
+//            }
+//            //mPostersUrlString = prepareData();
+//            return mAllDataInArrayList;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ArrayList<MovieComponent> movieComponents) {
+//            if (spinnerView.getVisibility() == View.VISIBLE) {
+//                spinnerView.setVisibility(View.GONE);
+//            }
+//            if (!movieComponents.isEmpty()) {
+//                mMovieRecycleAdapter.replaceMovieArrayList(movieComponents);
+//                noInternet.setVisibility(View.GONE);
+//            } else {
+//                noMovies.setText(R.string.no_movies);
+//            }
+//        }
+//    }
 
     // We restore after onStart() has completed.
     // The savedInstanceState Bundle is same as the one used in onCreate().
@@ -227,8 +276,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         mSearchString = adapterView.getSelectedItem().toString();
 
          /* Sending the HTTP and JSON parse in to background */
-        new multiThreadingClass().execute(mSearchString);
-        Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
+//        new multiThreadingClass().execute(mSearchString);
+//        Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
 
         // TODO: Will be used later
 //        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);

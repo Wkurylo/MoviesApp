@@ -1,4 +1,4 @@
-package com.example.wojtekkurylo.moviesapp;
+package com.example.wojtekkurylo.moviesapp.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.wojtekkurylo.moviesapp.Model.MovieComponent;
+import com.example.wojtekkurylo.moviesapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

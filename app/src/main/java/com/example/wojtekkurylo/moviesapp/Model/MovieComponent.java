@@ -1,8 +1,12 @@
-package com.example.wojtekkurylo.moviesapp;
+package com.example.wojtekkurylo.moviesapp.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 /**
  * {@link MovieComponent} Custom class to store reference to movie details. The Class implements Parcelable
@@ -25,12 +29,26 @@ public class MovieComponent implements Parcelable {
             return new MovieComponent[size];
         }
     };
+
+    // @SerializedName correspond to JSON HTTP respond name-filed we are interested in.
+
+    @SerializedName("title")
     private String mTitle;                                       // String
+
+    @SerializedName("release_date")
     private String mReleaseDate;                                // String
+
+    @SerializedName("poster_path")
     private String mPosterUrl;         // Drawable Resource ID  // String or null !
+
+    @SerializedName("vote_average")
     private Double mAverage;                                    // number
+
+    @SerializedName("overview")
     private String mPlotSynopsis;                                // String
 
+    @SerializedName("results")
+    private ArrayList<MovieComponent> mResults;
 
     public MovieComponent(String title, String releaseDate, String posterUrl, Number average, String plot) {
         mTitle = title;
@@ -109,6 +127,10 @@ public class MovieComponent implements Parcelable {
 
     public void setPlotSynopsis(String synopsis) {
         mPlotSynopsis = synopsis;
+    }
+
+    public ArrayList<MovieComponent> getResults() {
+        return mResults;
     }
 
 

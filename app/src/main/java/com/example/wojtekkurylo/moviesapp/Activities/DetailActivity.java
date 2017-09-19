@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.wojtekkurylo.moviesapp.MovieComponent;
+import com.example.wojtekkurylo.moviesapp.Model.MovieComponent;
 import com.example.wojtekkurylo.moviesapp.R;
 import com.squareup.picasso.Picasso;
 

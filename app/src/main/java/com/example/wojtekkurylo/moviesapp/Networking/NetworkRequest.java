@@ -21,6 +21,7 @@ public class NetworkRequest {
     private static final String API_KEY_KEY = "api_key";
     private static final String API_KEY_VALUE = BuildConfig.API_KEY;
 
+    // TARGET: "https://api.themoviedb.org/3/movie/top_rated?api_key=INSERT_YOUR_API_KEY"
 
     public static URL buildUrl(String moviePath) {
         Uri builtUri = Uri.parse(MOVIE_DB).buildUpon()

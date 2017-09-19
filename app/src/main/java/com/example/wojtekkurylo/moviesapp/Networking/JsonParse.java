@@ -2,7 +2,7 @@ package com.example.wojtekkurylo.moviesapp.Networking;
 
 import android.util.Log;
 
-import com.example.wojtekkurylo.moviesapp.MovieComponent;
+import com.example.wojtekkurylo.moviesapp.Model.MovieComponent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
