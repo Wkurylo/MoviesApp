@@ -24,8 +24,6 @@ import android.widget.TextView;
 import com.example.wojtekkurylo.moviesapp.BuildConfig;
 import com.example.wojtekkurylo.moviesapp.Model.MovieComponent;
 import com.example.wojtekkurylo.moviesapp.Adapter.MovieRecyclerAdapter;
-import com.example.wojtekkurylo.moviesapp.Networking.JsonParse;
-import com.example.wojtekkurylo.moviesapp.Networking.NetworkRequest;
 import com.example.wojtekkurylo.moviesapp.R;
 import com.example.wojtekkurylo.moviesapp.Rest.MovieApiService;
 import com.example.wojtekkurylo.moviesapp.Values.Constants;
@@ -49,8 +47,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     private MovieRecyclerAdapter mMovieRecycleAdapter = new MovieRecyclerAdapter(this, MainActivity.this);
     private ArrayList<MovieComponent> mAllDataInArrayList;
     private RecyclerView mRecyclerView;
-    private String mSearchString;
+    private String mSearchString = "popular";
     private static Retrofit mRetrofit = null;
+    private Call<MovieComponent> mCall;
+    private MovieApiService mMovieApiService;
 
     // themoviedb.org API KEY
     private static final String API_KEY_VALUE = BuildConfig.API_KEY;
@@ -135,12 +135,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
      * clicks.
      *
-     * @param title The title for the movie that was clicked
+     * @param title       The title for the movie that was clicked
      * @param releaseDate The releaseDate for the movie that was clicked
-     * @param posterUrl The Image URL in String for the movie that was clicked
-     * @param average The average for the movie that was clicked
-     * @param overview The overview for the movie that was clicked
-     *
+     * @param posterUrl   The Image URL in String for the movie that was clicked
+     * @param average     The average for the movie that was clicked
+     * @param overview    The overview for the movie that was clicked
      */
     @Override
     public void onClick(String title, String releaseDate, String posterUrl, Double average, String overview) {
@@ -152,6 +151,10 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 
     // This method create an instance of Retrofit
     public void useRetrofilToConnectAndGetAiData() {
+        if (spinnerView.getVisibility() == View.GONE) {
+            spinnerView.setVisibility(View.VISIBLE);
+        }
+
         if (mRetrofit == null) {
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(MOVIE_DB)
@@ -159,28 +162,36 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
                     .build();
         }
 
-        MovieApiService movieApiService = mRetrofit.create(MovieApiService.class);
-
-        Call<MovieComponent> call = movieApiService.getMostPopularMovies(API_KEY_VALUE);
-        call.enqueue(new Callback<MovieComponent>() {
+        mMovieApiService = mRetrofit.create(MovieApiService.class);
+// TODO: 20/09/2017 How to make retrofit responding on spinner selection ? 
+        if (mSearchString.equals(R.string.popular)) {
+            mCall = mMovieApiService.getMostPopularMovies(API_KEY_VALUE);
+        } else {
+            mCall = mMovieApiService.getTopRatedMovies(API_KEY_VALUE);
+        }
+        //mCall = mMovieApiService.getMostPopularMovies(API_KEY_VALUE);
+        mCall.enqueue(new Callback<MovieComponent>() {
             @Override
             public void onResponse(Call<MovieComponent> call, Response<MovieComponent> response) {
 
                 ArrayList<MovieComponent> movieArray = response.body().getResults();
 
+                if (spinnerView.getVisibility() == View.VISIBLE) {
+                    spinnerView.setVisibility(View.GONE);
+                }
+                noInternet.setVisibility(View.GONE);
                 mMovieRecycleAdapter.replaceMovieArrayList(movieArray);
 
             }
 
             @Override
             public void onFailure(Call<MovieComponent> call, Throwable t) {
-
+                noMovies.setText(R.string.no_movies);
                 Log.e(TAG, t.toString());
             }
         });
 
     }
-
 
 
 //    private class multiThreadingClass extends AsyncTask<String, Void, ArrayList<MovieComponent>> {
@@ -278,6 +289,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
          /* Sending the HTTP and JSON parse in to background */
 //        new multiThreadingClass().execute(mSearchString);
 //        Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
+//        if (mSearchString.equals(R.string.popular)) {
+//            mCall = mMovieApiService.getMostPopularMovies(API_KEY_VALUE);
+//        } else {
+//            mCall = mMovieApiService.getTopRatedMovies(API_KEY_VALUE);
+//        }
 
         // TODO: Will be used later
 //        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
@@ -291,7 +307,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 //            new multiThreadingClass().execute(mSearchString);
 //            Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
 //        }
-
 
 
     }
