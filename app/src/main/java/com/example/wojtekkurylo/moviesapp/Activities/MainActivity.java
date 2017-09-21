@@ -230,8 +230,13 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-        mSelectedString = adapterView.getSelectedItem().toString();
+        
+        //// TODO: If statement below is a Temporaly resolution for spinner logic issue - will implement the regular menu 
+        if(mSearchString!=null){
+            mSelectedString = mSearchString;
+        } else {
+            mSelectedString = adapterView.getSelectedItem().toString();
+        }
         // TODO: CARLOS : need to call method each time on item selected ?
         if(mAllDataInArrayList.isEmpty() || !mSelectedString.equals(mSearchString)) {
             mSearchString = mSelectedString;
