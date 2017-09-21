@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     private ArrayList<MovieComponent> mAllDataInArrayList;
     private RecyclerView mRecyclerView;
     private String mSearchString;
+    private String mSelectedString;
     private static Retrofit mRetrofit = null;
     private Call<MovieComponent> mCall;
     private MovieApiService mMovieApiService;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
             mAllDataInArrayList = new ArrayList<>();
         } else {
             mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
+            mSearchString = savedInstanceState.getString(Constants.KEY_STRING_MENU_SELECTION);
         }
         // set the user interface layout for this Activity
         // the layout file is defined in the project res/layout/activity_main.xml file
@@ -160,13 +162,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
             @Override
             public void onResponse(Call<MovieComponent> call, Response<MovieComponent> response) {
 
-                ArrayList<MovieComponent> movieArray = response.body().getResults();
+                mAllDataInArrayList = response.body().getResults();
 
+                Log.d(TAG,"Yes I am making another HTTP request + parse" + mAllDataInArrayList);
                 if (spinnerView.getVisibility() == View.VISIBLE) {
                     spinnerView.setVisibility(View.GONE);
                 }
                 noInternet.setVisibility(View.GONE);
-                mMovieRecycleAdapter.replaceMovieArrayList(movieArray);
+                mMovieRecycleAdapter.replaceMovieArrayList(mAllDataInArrayList);
 
             }
 
@@ -187,12 +190,14 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         // recovering the instance state if exist
         mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
+        mSearchString = savedInstanceState.getString(Constants.KEY_STRING_MENU_SELECTION);
     }
 
     // invoked when the activity may be temporarily destroyed, save the instance state here
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(Constants.KEY_ARRAY_LIST_PARCELABLE, mAllDataInArrayList);
+        outState.putString(Constants.KEY_STRING_MENU_SELECTION,mSearchString);
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
@@ -226,9 +231,18 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        mSearchString = adapterView.getSelectedItem().toString();
+        mSelectedString = adapterView.getSelectedItem().toString();
         // TODO: CARLOS : need to call method each time on item selected ?
-        useRetrofilToConnectAndGetAiData();
+        if(mAllDataInArrayList.isEmpty() || !mSelectedString.equals(mSearchString)) {
+            mSearchString = mSelectedString;
+            useRetrofilToConnectAndGetAiData();
+        } else {
+            if (spinnerView.getVisibility() == View.VISIBLE) {
+                spinnerView.setVisibility(View.GONE);
+            }
+            noInternet.setVisibility(View.GONE);
+            mMovieRecycleAdapter.replaceMovieArrayList(mAllDataInArrayList);
+        }
 
         // TODO: Will be used later
 //        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);

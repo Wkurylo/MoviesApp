@@ -9,4 +9,5 @@ public class Constants {
 
     // Key for onSaveInstanceState - ParcelableArrayList
     public static final String KEY_ARRAY_LIST_PARCELABLE = "mAllDataInArrayList";
+    public static final String KEY_STRING_MENU_SELECTION ="selection";
 }
