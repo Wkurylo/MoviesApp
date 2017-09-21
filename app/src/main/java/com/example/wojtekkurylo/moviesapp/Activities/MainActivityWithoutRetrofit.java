@@ -41,7 +41,7 @@
 // * REFERENCE
 // */
 //
-//// TODO: 19/09/2017 TO BE USED LATER
+//// TODO: 19/09/2017 TO BE USED LATER - MainActivity without Retrofit Library // Reference only
 //
 //public class MainActivityWithoutRetrofit extends AppCompatActivity implements MovieRecyclerAdapter.MovieAdapterOnClickHandler, AdapterView.OnItemSelectedListener {
 //
@@ -114,7 +114,7 @@
 //            noMovies.setVisibility(View.GONE);
 //        }
 //
-//        // TODO: Will be used later
+//        // TODO: Will be used later (without Retrofit) // Reference only
 ////        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 ////        SharedPreferences.Editor editor = sharedPref.edit();
 ////        editor.putString(getString(R.string.selected),mSearchString);
@@ -237,7 +237,7 @@
 //        new MainActivityWithoutRetrofit.multiThreadingClass().execute(mSearchString);
 //        Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
 //
-//        // TODO: Will be used later
+//        // TODO: Will be used later (without Retrofit) // Reference only
 ////        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 ////        String defaultValue = getResources().getString(R.string.popular);
 ////        String sharedString = sharedPref.getString(getString(R.string.selected),defaultValue);

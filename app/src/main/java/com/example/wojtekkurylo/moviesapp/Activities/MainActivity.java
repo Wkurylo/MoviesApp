@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
@@ -27,9 +26,6 @@ import com.example.wojtekkurylo.moviesapp.Adapter.MovieRecyclerAdapter;
 import com.example.wojtekkurylo.moviesapp.R;
 import com.example.wojtekkurylo.moviesapp.Rest.MovieApiService;
 import com.example.wojtekkurylo.moviesapp.Values.Constants;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     private MovieRecyclerAdapter mMovieRecycleAdapter = new MovieRecyclerAdapter(this, MainActivity.this);
     private ArrayList<MovieComponent> mAllDataInArrayList;
     private RecyclerView mRecyclerView;
-    private String mSearchString = "popular";
+    private String mSearchString;
     private static Retrofit mRetrofit = null;
     private Call<MovieComponent> mCall;
     private MovieApiService mMovieApiService;
@@ -121,14 +117,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
             spinnerView.setVisibility(View.GONE);
             noMovies.setVisibility(View.GONE);
         }
-
-        // TODO: Will be used later
-//        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        editor.putString(getString(R.string.selected),mSearchString);
-//        editor.commit();
-
-        useRetrofilToConnectAndGetAiData();
     }
 
     /**
@@ -163,13 +151,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         }
 
         mMovieApiService = mRetrofit.create(MovieApiService.class);
-// TODO: 20/09/2017 How to make retrofit responding on spinner selection ? 
-        if (mSearchString.equals(R.string.popular)) {
-            mCall = mMovieApiService.getMostPopularMovies(API_KEY_VALUE);
-        } else {
-            mCall = mMovieApiService.getTopRatedMovies(API_KEY_VALUE);
-        }
-        //mCall = mMovieApiService.getMostPopularMovies(API_KEY_VALUE);
+
+// TODO: CARLOS - notify about selection made by user in @onItemSelected ?
+
+        mCall = mMovieApiService.getSelectedMovies(mSearchString,API_KEY_VALUE);
+
         mCall.enqueue(new Callback<MovieComponent>() {
             @Override
             public void onResponse(Call<MovieComponent> call, Response<MovieComponent> response) {
@@ -192,50 +178,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         });
 
     }
-
-
-//    private class multiThreadingClass extends AsyncTask<String, Void, ArrayList<MovieComponent>> {
-//        @Override
-//        protected void onPreExecute() {
-//            if (spinnerView.getVisibility() == View.GONE) {
-//                spinnerView.setVisibility(View.VISIBLE);
-//            }
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected ArrayList<MovieComponent> doInBackground(String... strings) {
-//
-//            if (strings.length == 0) {
-//                return null;
-//            }
-//
-//            String selection = strings[0];
-//            URL url = NetworkRequest.buildUrl(selection);
-//
-//            try {
-//                String jsonMovieResponse = NetworkRequest.makeHttpRequest(url);
-//                mAllDataInArrayList = JsonParse.extractNews(jsonMovieResponse);
-//            } catch (IOException e) {
-//                Log.e("MainActivity", "Error in MA with makeHttpRequest", e);
-//            }
-//            //mPostersUrlString = prepareData();
-//            return mAllDataInArrayList;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(ArrayList<MovieComponent> movieComponents) {
-//            if (spinnerView.getVisibility() == View.VISIBLE) {
-//                spinnerView.setVisibility(View.GONE);
-//            }
-//            if (!movieComponents.isEmpty()) {
-//                mMovieRecycleAdapter.replaceMovieArrayList(movieComponents);
-//                noInternet.setVisibility(View.GONE);
-//            } else {
-//                noMovies.setText(R.string.no_movies);
-//            }
-//        }
-//    }
 
     // We restore after onStart() has completed.
     // The savedInstanceState Bundle is same as the one used in onCreate().
@@ -285,15 +227,8 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         mSearchString = adapterView.getSelectedItem().toString();
-
-         /* Sending the HTTP and JSON parse in to background */
-//        new multiThreadingClass().execute(mSearchString);
-//        Log.d("MainActivity", "SELECTED onItemSelected: " + mSearchString);
-//        if (mSearchString.equals(R.string.popular)) {
-//            mCall = mMovieApiService.getMostPopularMovies(API_KEY_VALUE);
-//        } else {
-//            mCall = mMovieApiService.getTopRatedMovies(API_KEY_VALUE);
-//        }
+        // TODO: CARLOS : need to call method each time on item selected ?
+        useRetrofilToConnectAndGetAiData();
 
         // TODO: Will be used later
 //        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
@@ -321,14 +256,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         super.onCreateSupportNavigateUpTaskStack(builder);
     }
 
-
-    //    Why Parcelable ?
-//      When starting on Android, we all learn that we cannot just pass object references to activities and fragments,
-//      we have to put those in an Intent / Bundle.
-//
-//      We have two options, we can either make our objects Parcelable or Serializable.
-//      Serializable mechanism == the Master of Simplicity in implementing;
-//      Parcelable mechanism == the Speed King;
 }
 
 
