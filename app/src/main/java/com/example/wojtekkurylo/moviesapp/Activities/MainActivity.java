@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
     private static Retrofit mRetrofit = null;
     private Call<MovieComponent> mCall;
     private MovieApiService mMovieApiService;
+    private boolean mSavedInstanceChecker = false;
 
     // themoviedb.org API KEY
     private static final String API_KEY_VALUE = BuildConfig.API_KEY;
@@ -72,9 +73,11 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
         // recovering the instance state if exist
         if (savedInstanceState == null || !savedInstanceState.containsKey(Constants.KEY_ARRAY_LIST_PARCELABLE)) {
             mAllDataInArrayList = new ArrayList<>();
+            mSavedInstanceChecker = false;
         } else {
             mAllDataInArrayList = savedInstanceState.getParcelableArrayList("mAllDataInArrayList");
             mSearchString = savedInstanceState.getString(Constants.KEY_STRING_MENU_SELECTION);
+            mSavedInstanceChecker = true;
         }
         // set the user interface layout for this Activity
         // the layout file is defined in the project res/layout/activity_main.xml file
@@ -154,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 
         mMovieApiService = mRetrofit.create(MovieApiService.class);
 
-// TODO: CARLOS - notify about selection made by user in @onItemSelected ?
-
         mCall = mMovieApiService.getSelectedMovies(mSearchString,API_KEY_VALUE);
 
         mCall.enqueue(new Callback<MovieComponent>() {
@@ -230,14 +231,13 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        
-        //// TODO: If statement below is a Temporaly resolution for spinner logic issue - will implement the regular menu 
-        if(mSearchString!=null){
+
+        // If the mSearchString has been received in onSaveInstance then :
+        if(mSavedInstanceChecker){
             mSelectedString = mSearchString;
         } else {
             mSelectedString = adapterView.getSelectedItem().toString();
         }
-        // TODO: CARLOS : need to call method each time on item selected ?
         if(mAllDataInArrayList.isEmpty() || !mSelectedString.equals(mSearchString)) {
             mSearchString = mSelectedString;
             useRetrofilToConnectAndGetAiData();
@@ -246,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements MovieRecyclerAdap
                 spinnerView.setVisibility(View.GONE);
             }
             noInternet.setVisibility(View.GONE);
+            mSavedInstanceChecker = false;
             mMovieRecycleAdapter.replaceMovieArrayList(mAllDataInArrayList);
         }
 
